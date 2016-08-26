@@ -3,8 +3,14 @@ package com.github.setial.intellijjavadocs.action;
 import com.intellij.codeInsight.generation.ClassMember;
 import com.intellij.codeInsight.generation.GenerateMembersHandlerBase;
 import com.intellij.codeInsight.generation.GenerationInfo;
+import com.intellij.codeInsight.generation.OverrideImplementUtil;
+import com.intellij.openapi.actionSystem.DataContext;
+import com.intellij.openapi.editor.Editor;
 import com.intellij.psi.PsiClass;
+import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The type Java doc handler.
@@ -30,4 +36,9 @@ public class JavaDocHandler extends GenerateMembersHandlerBase {
         return new GenerationInfo[0];
     }
 
+    @Override
+    public boolean isAvailableForQuickList(@NotNull Editor editor, @NotNull PsiFile file, @NotNull DataContext dataContext) {
+        PsiClass aClass = OverrideImplementUtil.getContextClass(file.getProject(), editor, file, true);
+        return aClass != null && this.hasMembers(aClass);
+    }
 }
